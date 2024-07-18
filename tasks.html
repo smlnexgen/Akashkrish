@@ -313,166 +313,180 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script>
-        let tasks = [];
-        let editTaskId = null;
+      let tasks = [];
+let editTaskId = null;
+const binId = '6698ab5fe41b4d34e4137d3d';
+const masterKey = '$2a$10$vhlbU9oZUZJ4P9y5Nm7ysO.feN/1hphWUkj01efJFA0iYqRsKu6ky';
+const apiUrl = `https://api.jsonbin.io/v3/b/${binId}`;
 
-        document.getElementById('addTaskForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const task = {
+document.getElementById('addTaskForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const task = {
+        id: Date.now(),
+        date: document.getElementById('taskDate').value,
+        name: document.getElementById('taskName').value,
+        description: document.getElementById('taskDescription').value,
+        status: document.getElementById('taskStatus').value,
+        assignedTo: document.getElementById('assignedTo').value,
+        assignedBy: document.getElementById('assignedBy').value,
+        assignedOn: document.getElementById('assignedOn').value,
+        deadline: document.getElementById('deadline').value
+    };
+    tasks.push(task);
+    saveTasks();
+    updateTable();
+    $('#addTaskModal').modal('hide');
+    document.getElementById('addTaskForm').reset();
+});
+
+document.getElementById('editTaskForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const updatedTask = {
+        id: editTaskId,
+        date: document.getElementById('editTaskDate').value,
+        name: document.getElementById('editTaskName').value,
+        description: document.getElementById('editTaskDescription').value,
+        status: document.getElementById('editTaskStatus').value,
+        assignedTo: document.getElementById('editAssignedTo').value,
+        assignedBy: document.getElementById('editAssignedBy').value,
+        assignedOn: document.getElementById('editAssignedOn').value,
+        deadline: document.getElementById('editDeadline').value
+    };
+    const index = tasks.findIndex(task => task.id === editTaskId);
+    tasks[index] = updatedTask;
+    saveTasks();
+    updateTable();
+    $('#editTaskModal').modal('hide');
+});
+
+function updateTable() {
+    const tbody = document.getElementById('taskTableBody');
+    tbody.innerHTML = '';
+    tasks.forEach(task => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${task.date}</td>
+            <td>${task.name}</td>
+            <td>${task.description}</td>
+            <td>${task.status}</td>
+            <td>${task.assignedTo}</td>
+            <td>${task.assignedBy}</td>
+            <td>${task.assignedOn}</td>
+            <td>${task.deadline}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="editTask(${task.id})"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})"><i class="fas fa-trash"></i></button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    updateTaskCounts();
+}
+
+function editTask(id) {
+    const task = tasks.find(task => task.id === id);
+    editTaskId = task.id;
+    document.getElementById('editTaskDate').value = task.date;
+    document.getElementById('editTaskName').value = task.name;
+    document.getElementById('editTaskDescription').value = task.description;
+    document.getElementById('editTaskStatus').value = task.status;
+    document.getElementById('editAssignedTo').value = task.assignedTo;
+    document.getElementById('editAssignedBy').value = task.assignedBy;
+    document.getElementById('editAssignedOn').value = task.assignedOn;
+    document.getElementById('editDeadline').value = task.deadline;
+    $('#editTaskModal').modal('show');
+}
+
+function deleteTask(id) {
+    tasks = tasks.filter(task => task.id !== id);
+    saveTasks();
+    updateTable();
+}
+
+function updateTaskCounts() {
+    const totalTasks = tasks.length;
+    const pendingTasks = tasks.filter(task => task.status === 'Pending').length;
+    const completedTasks = tasks.filter(task => task.status === 'Completed').length;
+    document.getElementById('totalTasksCount').innerText = totalTasks;
+    document.getElementById('pendingTasksCount').innerText = pendingTasks;
+    document.getElementById('completedTasksCount').innerText = completedTasks;
+}
+
+function saveTasks() {
+    fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': masterKey
+        },
+        body: JSON.stringify({ tasks })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Tasks saved successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error saving tasks:', error);
+    });
+}
+
+function loadTasks() {
+    fetch(apiUrl, {
+        headers: {
+            'X-Master-Key': masterKey
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        tasks = data.record.tasks || [];
+        updateTable();
+    })
+    .catch(error => {
+        console.error('Error loading tasks:', error);
+    });
+}
+
+document.getElementById('exportButton').addEventListener('click', exportTasks);
+document.getElementById('importFileInput').addEventListener('change', importTasks);
+
+function exportTasks() {
+    const csv = Papa.unparse(tasks);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'tasks.csv';
+    link.click();
+}
+
+function importTasks(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const csv = e.target.result;
+            const parsed = Papa.parse(csv, { header: true });
+            tasks = parsed.data.map(task => ({
                 id: Date.now(),
-                date: document.getElementById('taskDate').value,
-                name: document.getElementById('taskName').value,
-                description: document.getElementById('taskDescription').value,
-                status: document.getElementById('taskStatus').value,
-                assignedTo: document.getElementById('assignedTo').value,
-                assignedBy: document.getElementById('assignedBy').value,
-                assignedOn: document.getElementById('assignedOn').value,
-                deadline: document.getElementById('deadline').value
-            };
-            tasks.push(task);
+                date: task.date,
+                name: task.name,
+                description: task.description,
+                status: task.status,
+                assignedTo: task.assignedTo,
+                assignedBy: task.assignedBy,
+                assignedOn: task.assignedOn,
+                deadline: task.deadline
+            }));
+            saveTasks();
             updateTable();
-            $('#addTaskModal').modal('hide');
-            document.getElementById('addTaskForm').reset();
-        });
+        };
+        reader.readAsText(file);
+    }
+}
 
-        document.getElementById('editTaskForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const updatedTask = {
-                id: editTaskId,
-                date: document.getElementById('editTaskDate').value,
-                name: document.getElementById('editTaskName').value,
-                description: document.getElementById('editTaskDescription').value,
-                status: document.getElementById('editTaskStatus').value,
-                assignedTo: document.getElementById('editAssignedTo').value,
-                assignedBy: document.getElementById('editAssignedBy').value,
-                assignedOn: document.getElementById('editAssignedOn').value,
-                deadline: document.getElementById('editDeadline').value
-            };
-            const index = tasks.findIndex(task => task.id === editTaskId);
-            tasks[index] = updatedTask;
-            updateTable();
-            $('#editTaskModal').modal('hide');
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    loadTasks();
+});
 
-        function updateTable() {
-            const tbody = document.getElementById('taskTableBody');
-            tbody.innerHTML = '';
-            tasks.forEach(task => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${task.date}</td>
-                    <td>${task.name}</td>
-                    <td>${task.description}</td>
-                    <td>${task.status}</td>
-                    <td>${task.assignedTo}</td>
-                    <td>${task.assignedBy}</td>
-                    <td>${task.assignedOn}</td>
-                    <td>${task.deadline}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="editTask(${task.id})"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            updateTaskCounts();
-        }
-
-        function editTask(id) {
-            const task = tasks.find(task => task.id === id);
-            editTaskId = task.id;
-            document.getElementById('editTaskDate').value = task.date;
-            document.getElementById('editTaskName').value = task.name;
-            document.getElementById('editTaskDescription').value = task.description;
-            document.getElementById('editTaskStatus').value = task.status;
-            document.getElementById('editAssignedTo').value = task.assignedTo;
-            document.getElementById('editAssignedBy').value = task.assignedBy;
-            document.getElementById('editAssignedOn').value = task.assignedOn;
-            document.getElementById('editDeadline').value = task.deadline;
-            $('#editTaskModal').modal('show');
-        }
-
-        function deleteTask(id) {
-            tasks = tasks.filter(task => task.id !== id);
-            updateTable();
-        }
-
-        function updateTaskCounts() {
-            const totalTasks = tasks.length;
-            const pendingTasks = tasks.filter(task => task.status === 'Pending').length;
-            const completedTasks = tasks.filter(task => task.status === 'Completed').length;
-            document.getElementById('totalTasksCount').innerText = totalTasks;
-            document.getElementById('pendingTasksCount').innerText = pendingTasks;
-            document.getElementById('completedTasksCount').innerText = completedTasks;
-        }
-
-        function exportTasks() {
-            const csv = Papa.unparse(tasks);
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'tasks.csv';
-            link.click();
-        }
-
-        function importTasks(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const csv = e.target.result;
-                    const parsed = Papa.parse(csv, { header: true });
-                    tasks = parsed.data.map(task => ({
-                        id: Date.now(),
-                        date: task.date,
-                        name: task.name,
-                        description: task.description,
-                        status: task.status,
-                        assignedTo: task.assignedTo,
-                        assignedBy: task.assignedBy,
-                        assignedOn: task.assignedOn,
-                        deadline: task.deadline
-                    }));
-                    updateTable();
-                };
-                reader.readAsText(file);
-            }
-        }
-
-        document.getElementById('searchInput').addEventListener('input', function (event) {
-            const searchValue = event.target.value.toLowerCase();
-            const filteredTasks = tasks.filter(task => 
-                task.name.toLowerCase().includes(searchValue) ||
-                task.description.toLowerCase().includes(searchValue)
-            );
-            const tbody = document.getElementById('taskTableBody');
-            tbody.innerHTML = '';
-            filteredTasks.forEach(task => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${task.date}</td>
-                    <td>${task.name}</td>
-                    <td>${task.description}</td>
-                    <td>${task.status}</td>
-                    <td>${task.assignedTo}</td>
-                    <td>${task.assignedBy}</td>
-                    <td>${task.assignedOn}</td>
-                    <td>${task.deadline}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="editTask(${task.id})"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        });
-
-        document.getElementById('addTaskButton').addEventListener('click', function () {
-            $('#addTaskModal').modal('show');
-        });
-
-        document.getElementById('exportButton').addEventListener('click', exportTasks);
-        document.getElementById('importFileInput').addEventListener('change', importTasks);
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

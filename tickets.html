@@ -248,171 +248,197 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    let tickets = [];
-    let editedTicketIndex = null;
+let tickets = [];
+let editedTicketIndex = null;
+const binId = '6698ab75e41b4d34e4137d48';
+const masterKey = '$2a$10$vhlbU9oZUZJ4P9y5Nm7ysO.feN/1hphWUkj01efJFA0iYqRsKu6ky';
+const apiUrl = `https://api.jsonbin.io/v3/b/${binId}`;
 
-    document.getElementById('addTicketButton').addEventListener('click', () => {
-        $('#addTicketModal').modal('show');
+document.getElementById('addTicketButton').addEventListener('click', () => {
+    $('#addTicketModal').modal('show');
+});
+
+document.getElementById('addTicketForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    addTicket();
+});
+
+document.getElementById('editTicketForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateTicket();
+});
+
+document.getElementById('searchInput').addEventListener('input', (event) => {
+    filterTickets(event.target.value);
+});
+
+function addTicket() {
+    const ticketDate = document.getElementById("ticketDate").value;
+    const ticketName = document.getElementById("ticketName").value;
+    const ticketDescription = document.getElementById("ticketDescription").value;
+    const ticketStatus = document.getElementById("ticketStatus").value;
+    const ticketPriority = document.getElementById("ticketPriority").value;
+    const raisedBy = document.getElementById("raisedBy").value;
+    const raisedOn = document.getElementById("raisedOn").value;
+    const ticketDeadline = document.getElementById("ticketDeadline").value;
+
+    const ticket = {
+        ticketDate,
+        ticketName,
+        ticketDescription,
+        ticketStatus,
+        ticketPriority,
+        raisedBy,
+        raisedOn,
+        ticketDeadline
+    };
+
+    tickets.push(ticket);
+    saveTickets();
+    renderTickets();
+    updateCounts();
+    $("#addTicketModal").modal("hide");
+    document.getElementById("addTicketForm").reset();
+}
+
+function renderTickets(filteredTickets = tickets) {
+    const ticketTableBody = document.getElementById("ticketTableBody");
+    ticketTableBody.innerHTML = "";
+
+    filteredTickets.forEach((ticket, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${ticket.ticketDate}</td>
+            <td>${ticket.ticketName}</td>
+            <td>${ticket.ticketDescription}</td>
+            <td>${ticket.ticketStatus}</td>
+            <td>${ticket.ticketPriority}</td>
+            <td>${ticket.raisedBy}</td>
+            <td>${ticket.raisedOn}</td>
+            <td>${ticket.ticketDeadline}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="editTicket(${index})"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteTicket(${index})"><i class="fas fa-trash"></i></button>
+            </td>
+        `;
+        ticketTableBody.appendChild(row);
     });
+}
 
-    document.getElementById('addTicketForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        addTicket();
+function editTicket(index) {
+    const ticket = tickets[index];
+    editedTicketIndex = index;
+
+    document.getElementById("editTicketId").value = index;
+    document.getElementById("editTicketDate").value = ticket.ticketDate;
+    document.getElementById("editTicketName").value = ticket.ticketName;
+    document.getElementById("editTicketDescription").value = ticket.ticketDescription;
+    document.getElementById("editTicketStatus").value = ticket.ticketStatus;
+    document.getElementById("editTicketPriority").value = ticket.ticketPriority;
+    document.getElementById("editRaisedBy").value = ticket.raisedBy;
+    document.getElementById("editRaisedOn").value = ticket.raisedOn;
+    document.getElementById("editTicketDeadline").value = ticket.ticketDeadline;
+
+    $("#editTicketModal").modal("show");
+}
+
+function updateTicket() {
+    const ticketDate = document.getElementById("editTicketDate").value;
+    const ticketName = document.getElementById("editTicketName").value;
+    const ticketDescription = document.getElementById("editTicketDescription").value;
+    const ticketStatus = document.getElementById("editTicketStatus").value;
+    const ticketPriority = document.getElementById("editTicketPriority").value;
+    const raisedBy = document.getElementById("editRaisedBy").value;
+    const raisedOn = document.getElementById("editRaisedOn").value;
+    const ticketDeadline = document.getElementById("editTicketDeadline").value;
+
+    const updatedTicket = {
+        ticketDate,
+        ticketName,
+        ticketDescription,
+        ticketStatus,
+        ticketPriority,
+        raisedBy,
+        raisedOn,
+        ticketDeadline
+    };
+
+    tickets[editedTicketIndex] = updatedTicket;
+    saveTickets();
+    renderTickets();
+    updateCounts();
+    $("#editTicketModal").modal("hide");
+}
+
+function deleteTicket(index) {
+    tickets.splice(index, 1);
+    saveTickets();
+    renderTickets();
+    updateCounts();
+}
+
+function filterTickets(searchTerm) {
+    const filteredTickets = tickets.filter(ticket =>
+        ticket.ticketName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.ticketDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.ticketStatus.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.ticketPriority.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.raisedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.raisedOn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.ticketDeadline.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    renderTickets(filteredTickets);
+}
+
+function updateCounts() {
+    const total = tickets.length;
+    const pending = tickets.filter(ticket => ticket.ticketStatus === "Pending").length;
+    const resolved = tickets.filter(ticket => ticket.ticketStatus === "Resolved").length;
+
+    document.getElementById("totalTickets").textContent = total;
+    document.getElementById("pendingTickets").textContent = pending;
+    document.getElementById("resolvedTickets").textContent = resolved;
+}
+
+function saveTickets() {
+    fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': masterKey
+        },
+        body: JSON.stringify({ tickets })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Tickets saved successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error saving tickets:', error);
     });
+}
 
-    document.getElementById('editTicketForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        updateTicket();
-    });
-
-    document.getElementById('searchInput').addEventListener('input', (event) => {
-        filterTickets(event.target.value);
-    });
-
-    function addTicket() {
-        const ticketDate = document.getElementById("ticketDate").value;
-        const ticketName = document.getElementById("ticketName").value;
-        const ticketDescription = document.getElementById("ticketDescription").value;
-        const ticketStatus = document.getElementById("ticketStatus").value;
-        const ticketPriority = document.getElementById("ticketPriority").value;
-        const raisedBy = document.getElementById("raisedBy").value;
-        const raisedOn = document.getElementById("raisedOn").value;
-        const ticketDeadline = document.getElementById("ticketDeadline").value;
-
-        const ticket = {
-            ticketDate,
-            ticketName,
-            ticketDescription,
-            ticketStatus,
-            ticketPriority,
-            raisedBy,
-            raisedOn,
-            ticketDeadline
-        };
-
-        tickets.push(ticket);
-        saveTickets();
-        renderTickets();
-        updateCounts();
-        $("#addTicketModal").modal("hide");
-        document.getElementById("addTicketForm").reset();
-    }
-
-    function renderTickets(filteredTickets = tickets) {
-        const ticketTableBody = document.getElementById("ticketTableBody");
-        ticketTableBody.innerHTML = "";
-
-        filteredTickets.forEach((ticket, index) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${ticket.ticketDate}</td>
-                <td>${ticket.ticketName}</td>
-                <td>${ticket.ticketDescription}</td>
-                <td>${ticket.ticketStatus}</td>
-                <td>${ticket.ticketPriority}</td>
-                <td>${ticket.raisedBy}</td>
-                <td>${ticket.raisedOn}</td>
-                <td>${ticket.ticketDeadline}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick="editTicket(${index})"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteTicket(${index})"><i class="fas fa-trash"></i></button>
-                </td>
-            `;
-            ticketTableBody.appendChild(row);
-        });
-    }
-
-    function editTicket(index) {
-        const ticket = tickets[index];
-        editedTicketIndex = index;
-
-        document.getElementById("editTicketId").value = index;
-        document.getElementById("editTicketDate").value = ticket.ticketDate;
-        document.getElementById("editTicketName").value = ticket.ticketName;
-        document.getElementById("editTicketDescription").value = ticket.ticketDescription;
-        document.getElementById("editTicketStatus").value = ticket.ticketStatus;
-        document.getElementById("editTicketPriority").value = ticket.ticketPriority;
-        document.getElementById("editRaisedBy").value = ticket.raisedBy;
-        document.getElementById("editRaisedOn").value = ticket.raisedOn;
-        document.getElementById("editTicketDeadline").value = ticket.ticketDeadline;
-
-        $("#editTicketModal").modal("show");
-    }
-
-    function updateTicket() {
-        const ticketDate = document.getElementById("editTicketDate").value;
-        const ticketName = document.getElementById("editTicketName").value;
-        const ticketDescription = document.getElementById("editTicketDescription").value;
-        const ticketStatus = document.getElementById("editTicketStatus").value;
-        const ticketPriority = document.getElementById("editTicketPriority").value;
-        const raisedBy = document.getElementById("editRaisedBy").value;
-        const raisedOn = document.getElementById("editRaisedOn").value;
-        const ticketDeadline = document.getElementById("editTicketDeadline").value;
-
-        const updatedTicket = {
-            ticketDate,
-            ticketName,
-            ticketDescription,
-            ticketStatus,
-            ticketPriority,
-            raisedBy,
-            raisedOn,
-            ticketDeadline
-        };
-
-        tickets[editedTicketIndex] = updatedTicket;
-        saveTickets();
-        renderTickets();
-        updateCounts();
-        $("#editTicketModal").modal("hide");
-    }
-
-    function deleteTicket(index) {
-        tickets.splice(index, 1);
-        saveTickets();
-        renderTickets();
-        updateCounts();
-    }
-
-    function filterTickets(searchTerm) {
-        const filteredTickets = tickets.filter(ticket =>
-            ticket.ticketName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ticket.ticketDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ticket.ticketStatus.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ticket.ticketPriority.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ticket.raisedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ticket.raisedOn.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ticket.ticketDeadline.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        renderTickets(filteredTickets);
-    }
-
-    function updateCounts() {
-        const total = tickets.length;
-        const pending = tickets.filter(ticket => ticket.ticketStatus === "Pending").length;
-        const resolved = tickets.filter(ticket => ticket.ticketStatus === "Resolved").length;
-
-        document.getElementById("totalTickets").textContent = total;
-        document.getElementById("pendingTickets").textContent = pending;
-        document.getElementById("resolvedTickets").textContent = resolved;
-    }
-
-    function saveTickets() {
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-    }
-
-    function loadTickets() {
-        const storedTickets = localStorage.getItem('tickets');
-        if (storedTickets) {
-            tickets = JSON.parse(storedTickets);
-            renderTickets();
-            updateCounts();
+function loadTickets() {
+    fetch(apiUrl, {
+        headers: {
+            'X-Master-Key': masterKey
         }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        loadTickets();
+    })
+    .then(response => response.json())
+    .then(data => {
+        tickets = data.record.tickets || [];
+        renderTickets();
+        updateCounts();
+    })
+    .catch(error => {
+        console.error('Error loading tickets:', error);
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadTickets();
+});
+
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

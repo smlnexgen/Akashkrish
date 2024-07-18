@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketing System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-control {
+            margin-bottom: 0.5rem;
+        }
+        .table {
+            margin-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body class="content">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">AkashKrish Toyota Tickets</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tasks.html">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="posts.html">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tickets.html">Tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logoutButton" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container">
+    <h1 class="mb-4">Ticketing System</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-header">Total Tickets</div>
+                <div class="card-body">
+                    <h5 class="card-title" id="totalTickets">0</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning">
+                <div class="card-header">Pending Tickets</div>
+                <div class="card-body">
+                    <h5 class="card-title" id="pendingTickets">0</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-header">Resolved Tickets</div>
+                <div class="card-body">
+                    <h5 class="card-title" id="resolvedTickets">0</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <button id="addTicketButton" class="btn btn-primary">Raise New Ticket</button>
+        <input type="text" id="searchInput" class="form-control w-50" placeholder="Search Tickets">
+    </div>
+
+    <table class="table table-bordered table-responsive-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Ticket Date</th>
+                <th>Ticket Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Raised By</th>
+                <th>Raised On</th>
+                <th>Deadline</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="ticketTableBody">
+            <!-- Ticket rows will be dynamically generated here -->
+        </tbody>
+    </table>
+
+    <!-- Add Ticket Modal -->
+    <div class="modal fade" id="addTicketModal" tabindex="-1" aria-labelledby="addTicketModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTicketModalLabel">Raise New Ticket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTicketForm">
+                        <div class="form-group">
+                            <label for="ticketDate">Ticket Date</label>
+                            <input type="date" class="form-control" id="ticketDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketName">Ticket Name</label>
+                            <input type="text" class="form-control" id="ticketName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketDescription">Description</label>
+                            <textarea class="form-control" id="ticketDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketStatus">Status</label>
+                            <select class="form-control" id="ticketStatus" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketPriority">Priority</label>
+                            <select class="form-control" id="ticketPriority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="raisedBy">Raised By</label>
+                            <input type="text" class="form-control" id="raisedBy" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="raisedOn">Raised On</label>
+                            <input type="date" class="form-control" id="raisedOn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketDeadline">Deadline</label>
+                            <input type="date" class="form-control" id="ticketDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Ticket Modal -->
+    <div class="modal fade" id="editTicketModal" tabindex="-1" aria-labelledby="editTicketModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTicketModalLabel">Edit Ticket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTicketForm">
+                        <input type="hidden" id="editTicketId">
+                        <div class="form-group">
+                            <label for="editTicketDate">Ticket Date</label>
+                            <input type="date" class="form-control" id="editTicketDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTicketName">Ticket Name</label>
+                            <input type="text" class="form-control" id="editTicketName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTicketDescription">Description</label>
+                            <textarea class="form-control" id="editTicketDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTicketStatus">Status</label>
+                            <select class="form-control" id="editTicketStatus" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTicketPriority">Priority</label>
+                            <select class="form-control" id="editTicketPriority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editRaisedBy">Raised By</label>
+                            <input type="text" class="form-control" id="editRaisedBy" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editRaisedOn">Raised On</label>
+                            <input type="date" class="form-control" id="editRaisedOn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTicketDeadline">Deadline</label>
+                            <input type="date" class="form-control" id="editTicketDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    let tickets = [];
+    let editedTicketIndex = null;
+
+    document.getElementById('addTicketButton').addEventListener('click', () => {
+        $('#addTicketModal').modal('show');
+    });
+
+    document.getElementById('addTicketForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        addTicket();
+    });
+
+    document.getElementById('editTicketForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        updateTicket();
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (event) => {
+        filterTickets(event.target.value);
+    });
+
+    function addTicket() {
+        const ticketDate = document.getElementById("ticketDate").value;
+        const ticketName = document.getElementById("ticketName").value;
+        const ticketDescription = document.getElementById("ticketDescription").value;
+        const ticketStatus = document.getElementById("ticketStatus").value;
+        const ticketPriority = document.getElementById("ticketPriority").value;
+        const raisedBy = document.getElementById("raisedBy").value;
+        const raisedOn = document.getElementById("raisedOn").value;
+        const ticketDeadline = document.getElementById("ticketDeadline").value;
+
+        const ticket = {
+            ticketDate,
+            ticketName,
+            ticketDescription,
+            ticketStatus,
+            ticketPriority,
+            raisedBy,
+            raisedOn,
+            ticketDeadline
+        };
+
+        tickets.push(ticket);
+        saveTickets();
+        renderTickets();
+        updateCounts();
+        $("#addTicketModal").modal("hide");
+        document.getElementById("addTicketForm").reset();
+    }
+
+    function renderTickets(filteredTickets = tickets) {
+        const ticketTableBody = document.getElementById("ticketTableBody");
+        ticketTableBody.innerHTML = "";
+
+        filteredTickets.forEach((ticket, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${ticket.ticketDate}</td>
+                <td>${ticket.ticketName}</td>
+                <td>${ticket.ticketDescription}</td>
+                <td>${ticket.ticketStatus}</td>
+                <td>${ticket.ticketPriority}</td>
+                <td>${ticket.raisedBy}</td>
+                <td>${ticket.raisedOn}</td>
+                <td>${ticket.ticketDeadline}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editTicket(${index})"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteTicket(${index})"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            ticketTableBody.appendChild(row);
+        });
+    }
+
+    function editTicket(index) {
+        const ticket = tickets[index];
+        editedTicketIndex = index;
+
+        document.getElementById("editTicketId").value = index;
+        document.getElementById("editTicketDate").value = ticket.ticketDate;
+        document.getElementById("editTicketName").value = ticket.ticketName;
+        document.getElementById("editTicketDescription").value = ticket.ticketDescription;
+        document.getElementById("editTicketStatus").value = ticket.ticketStatus;
+        document.getElementById("editTicketPriority").value = ticket.ticketPriority;
+        document.getElementById("editRaisedBy").value = ticket.raisedBy;
+        document.getElementById("editRaisedOn").value = ticket.raisedOn;
+        document.getElementById("editTicketDeadline").value = ticket.ticketDeadline;
+
+        $("#editTicketModal").modal("show");
+    }
+
+    function updateTicket() {
+        const ticketDate = document.getElementById("editTicketDate").value;
+        const ticketName = document.getElementById("editTicketName").value;
+        const ticketDescription = document.getElementById("editTicketDescription").value;
+        const ticketStatus = document.getElementById("editTicketStatus").value;
+        const ticketPriority = document.getElementById("editTicketPriority").value;
+        const raisedBy = document.getElementById("editRaisedBy").value;
+        const raisedOn = document.getElementById("editRaisedOn").value;
+        const ticketDeadline = document.getElementById("editTicketDeadline").value;
+
+        const updatedTicket = {
+            ticketDate,
+            ticketName,
+            ticketDescription,
+            ticketStatus,
+            ticketPriority,
+            raisedBy,
+            raisedOn,
+            ticketDeadline
+        };
+
+        tickets[editedTicketIndex] = updatedTicket;
+        saveTickets();
+        renderTickets();
+        updateCounts();
+        $("#editTicketModal").modal("hide");
+    }
+
+    function deleteTicket(index) {
+        tickets.splice(index, 1);
+        saveTickets();
+        renderTickets();
+        updateCounts();
+    }
+
+    function filterTickets(searchTerm) {
+        const filteredTickets = tickets.filter(ticket =>
+            ticket.ticketName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ticket.ticketDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ticket.ticketStatus.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ticket.ticketPriority.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ticket.raisedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ticket.raisedOn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ticket.ticketDeadline.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        renderTickets(filteredTickets);
+    }
+
+    function updateCounts() {
+        const total = tickets.length;
+        const pending = tickets.filter(ticket => ticket.ticketStatus === "Pending").length;
+        const resolved = tickets.filter(ticket => ticket.ticketStatus === "Resolved").length;
+
+        document.getElementById("totalTickets").textContent = total;
+        document.getElementById("pendingTickets").textContent = pending;
+        document.getElementById("resolvedTickets").textContent = resolved;
+    }
+
+    function saveTickets() {
+        localStorage.setItem('tickets', JSON.stringify(tickets));
+    }
+
+    function loadTickets() {
+        const storedTickets = localStorage.getItem('tickets');
+        if (storedTickets) {
+            tickets = JSON.parse(storedTickets);
+            renderTickets();
+            updateCounts();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadTickets();
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var username = localStorage.getItem('username');
+    var password = localStorage.getItem('password');
+
+    // Check if username and password are set and valid
+    if (username === 'akashkrish' && password === 'hellosml') {
+        // User authenticated, show content
+        document.querySelector('.content').style.display = 'block';
+    } else {
+        // Redirect to login page
+        window.location.href = 'index.html';
+    }
+
+    // Logout button functionality
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+        window.location.href = 'index.html'; // Redirect to login page after logout
+    });
+});
+
+</script>
+</body>
+</html>

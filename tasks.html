@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKASHKRISH TOYOTA TASKS</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-brand {
+            color: #ffffff;
+        }
+        .card {
+            margin: 20px 0;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .modal-header {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .btn-export {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+        .btn-export:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+        .card-header {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+        @media (max-width: 768px) {
+            .card {
+                margin: 10px 0;
+            }
+            .table-responsive {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="content">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">AkashKrish Toyota Tasks</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tasks.html">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="posts.html">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tickets.html">Tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logoutButton" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total Tasks</div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="totalTasksCount">0</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-header">Pending Tasks</div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="pendingTasksCount">0</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Completed Tasks</div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="completedTasksCount">0</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal"><i class="fas fa-plus"></i> Add Task</button>
+                <button class="btn btn-export" onclick="exportTasks()"><i class="fas fa-file-export"></i> Export Tasks</button>
+                <input type="file" id="importFile" style="display: none;" onchange="importTasks(event)">
+                <button class="btn btn-success" onclick="document.getElementById('importFile').click()"><i class="fas fa-file-import"></i> Import Tasks</button>
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search tasks...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Task Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Assigned By</th>
+                        <th>Assigned On</th>
+                        <th>Deadline</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTaskForm">
+                        <div class="form-group">
+                            <label for="taskDate">Date</label>
+                            <input type="date" class="form-control" id="taskDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskName">Task Name</label>
+                            <input type="text" class="form-control" id="taskName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDescription">Description</label>
+                            <textarea class="form-control" id="taskDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskStatus">Status</label>
+                            <select class="form-control" id="taskStatus" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignedTo">Assigned To</label>
+                            <select class="form-control" id="assignedTo" required>
+                                <option value="Suman Kumar">Suman Kumar</option>
+                                <option value="Paramaleshwari">Paramaleshwari</option>
+                                <option value="Sada Shiva">Sada Shiva</option>
+                                <option value="Elavarasan">Elavarasan</option>
+                                <option value="Celin">Celin</option>
+                                <option value="Chithra">Chithra</option>
+                                <option value="Sathish">Sathish</option>
+                                <option value="Logav">Logav</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignedBy">Assigned By</label>
+                            <select class="form-control" id="assignedBy" required>
+                                <option value="Suman Kumar">Suman Kumar</option>
+                                <option value="Paramaleshwari">Paramaleshwari</option>
+                                <option value="Sada Shiva">Sada Shiva</option>
+                                <option value="Elavarasan">Elavarasan</option>
+                                <option value="Celin">Celin</option>
+                                <option value="Chithra">Chithra</option>
+                                <option value="Sathish">Sathish</option>
+                                <option value="Logav">Logav</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignedOn">Assigned On</label>
+                            <input type="date" class="form-control" id="assignedOn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deadline">Deadline</label>
+                            <input type="date" class="form-control" id="deadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTaskForm">
+                        <input type="hidden" id="editTaskId">
+                        <div class="form-group">
+                            <label for="editTaskDate">Date</label>
+                            <input type="date" class="form-control" id="editTaskDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskName">Task Name</label>
+                            <input type="text" class="form-control" id="editTaskName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskDescription">Description</label>
+                            <textarea class="form-control" id="editTaskDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskStatus">Status</label>
+                            <select class="form-control" id="editTaskStatus" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAssignedTo">Assigned To</label>
+                            <select class="form-control" id="editAssignedTo" required>
+                                <option value="Suman Kumar">Suman Kumar</option>
+                                <option value="Paramaleshwari">Paramaleshwari</option>
+                                <option value="Sada Shiva">Sada Shiva</option>
+                                <option value="Elavarasan">Elavarasan</option>
+                                <option value="Celin">Celin</option>
+                                <option value="Chithra">Chithra</option>
+                                <option value="Sathish">Sathish</option>
+                                <option value="Logav">Logav</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAssignedBy">Assigned By</label>
+                            <select class="form-control" id="editAssignedBy" required>
+                                <option value="Suman Kumar">Suman Kumar</option>
+                                <option value="Paramaleshwari">Paramaleshwari</option>
+                                <option value="Sada Shiva">Sada Shiva</option>
+                                <option value="Elavarasan">Elavarasan</option>
+                                <option value="Celin">Celin</option>
+                                <option value="Chithra">Chithra</option>
+                                <option value="Sathish">Sathish</option>
+                                <option value="Logav">Logav</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAssignedOn">Assigned On</label>
+                            <input type="date" class="form-control" id="editAssignedOn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDeadline">Deadline</label>
+                            <input type="date" class="form-control" id="editDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Task</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script>
+        let tasks = [];
+        let editTaskId = null;
+
+        document.getElementById('addTaskForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const task = {
+                id: Date.now(),
+                date: document.getElementById('taskDate').value,
+                name: document.getElementById('taskName').value,
+                description: document.getElementById('taskDescription').value,
+                status: document.getElementById('taskStatus').value,
+                assignedTo: document.getElementById('assignedTo').value,
+                assignedBy: document.getElementById('assignedBy').value,
+                assignedOn: document.getElementById('assignedOn').value,
+                deadline: document.getElementById('deadline').value
+            };
+            tasks.push(task);
+            updateTable();
+            $('#addTaskModal').modal('hide');
+            document.getElementById('addTaskForm').reset();
+        });
+
+        document.getElementById('editTaskForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const updatedTask = {
+                id: editTaskId,
+                date: document.getElementById('editTaskDate').value,
+                name: document.getElementById('editTaskName').value,
+                description: document.getElementById('editTaskDescription').value,
+                status: document.getElementById('editTaskStatus').value,
+                assignedTo: document.getElementById('editAssignedTo').value,
+                assignedBy: document.getElementById('editAssignedBy').value,
+                assignedOn: document.getElementById('editAssignedOn').value,
+                deadline: document.getElementById('editDeadline').value
+            };
+            const index = tasks.findIndex(task => task.id === editTaskId);
+            tasks[index] = updatedTask;
+            updateTable();
+            $('#editTaskModal').modal('hide');
+        });
+
+        function updateTable() {
+            const tbody = document.getElementById('taskTableBody');
+            tbody.innerHTML = '';
+            tasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.date}</td>
+                    <td>${task.name}</td>
+                    <td>${task.description}</td>
+                    <td>${task.status}</td>
+                    <td>${task.assignedTo}</td>
+                    <td>${task.assignedBy}</td>
+                    <td>${task.assignedOn}</td>
+                    <td>${task.deadline}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editTask(${task.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            updateTaskCounts();
+        }
+
+        function editTask(id) {
+            const task = tasks.find(task => task.id === id);
+            editTaskId = task.id;
+            document.getElementById('editTaskDate').value = task.date;
+            document.getElementById('editTaskName').value = task.name;
+            document.getElementById('editTaskDescription').value = task.description;
+            document.getElementById('editTaskStatus').value = task.status;
+            document.getElementById('editAssignedTo').value = task.assignedTo;
+            document.getElementById('editAssignedBy').value = task.assignedBy;
+            document.getElementById('editAssignedOn').value = task.assignedOn;
+            document.getElementById('editDeadline').value = task.deadline;
+            $('#editTaskModal').modal('show');
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            updateTable();
+        }
+
+        function updateTaskCounts() {
+            const totalTasks = tasks.length;
+            const pendingTasks = tasks.filter(task => task.status === 'Pending').length;
+            const completedTasks = tasks.filter(task => task.status === 'Completed').length;
+            document.getElementById('totalTasksCount').innerText = totalTasks;
+            document.getElementById('pendingTasksCount').innerText = pendingTasks;
+            document.getElementById('completedTasksCount').innerText = completedTasks;
+        }
+
+        function exportTasks() {
+            const csv = Papa.unparse(tasks);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'tasks.csv';
+            link.click();
+        }
+
+        function importTasks(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const csv = e.target.result;
+                    const parsed = Papa.parse(csv, { header: true });
+                    tasks = parsed.data.map(task => ({
+                        id: Date.now(),
+                        date: task.date,
+                        name: task.name,
+                        description: task.description,
+                        status: task.status,
+                        assignedTo: task.assignedTo,
+                        assignedBy: task.assignedBy,
+                        assignedOn: task.assignedOn,
+                        deadline: task.deadline
+                    }));
+                    updateTable();
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function (event) {
+            const searchValue = event.target.value.toLowerCase();
+            const filteredTasks = tasks.filter(task => 
+                task.name.toLowerCase().includes(searchValue) ||
+                task.description.toLowerCase().includes(searchValue)
+            );
+            const tbody = document.getElementById('taskTableBody');
+            tbody.innerHTML = '';
+            filteredTasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.date}</td>
+                    <td>${task.name}</td>
+                    <td>${task.description}</td>
+                    <td>${task.status}</td>
+                    <td>${task.assignedTo}</td>
+                    <td>${task.assignedBy}</td>
+                    <td>${task.assignedOn}</td>
+                    <td>${task.deadline}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editTask(${task.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        });
+
+        document.getElementById('addTaskButton').addEventListener('click', function () {
+            $('#addTaskModal').modal('show');
+        });
+
+        document.getElementById('exportButton').addEventListener('click', exportTasks);
+        document.getElementById('importFileInput').addEventListener('change', importTasks);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var username = localStorage.getItem('username');
+        var password = localStorage.getItem('password');
+
+        // Check if username and password are set and valid
+        if (username === 'akashkrish' && password === 'hellosml') {
+            // User authenticated, show content
+            document.querySelector('.content').style.display = 'block';
+        } else {
+            // Redirect to login page
+            window.location.href = 'index.html';
+        }
+
+        // Logout button functionality
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            window.location.href = 'index.html'; // Redirect to login page after logout
+        });
+    });
+
+</script>
+</body>
+</html>

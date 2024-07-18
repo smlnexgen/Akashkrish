@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            max-width: 400px;
+            padding: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="card-header">
+        Login
+    </div>
+    <div class="card-body">
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        // Check credentials
+        if (username === 'akashkrish' && password === 'hellosml') {
+            // Store credentials in local storage
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+
+            // Redirect to dashboard.html
+            window.location.href = 'dashboard.html';
+        } else {
+            // Show error message or handle invalid login
+            alert('Invalid username or password. Please try again.');
+        }
+    });
+
+    // Check if user is already logged in on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        var username = localStorage.getItem('username');
+        var password = localStorage.getItem('password');
+
+        // If credentials are stored and valid, redirect to dashboard
+        if (username === 'akashkrish' && password === 'hellosml') {
+            window.location.href = 'dashboard.html';
+        }
+    });
+</script>
+
+</body>
+</html>

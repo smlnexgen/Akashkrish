@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AkashKrish Toyota Posts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            margin: 10px;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .btn-sm {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body class="content">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">AkashKrish Toyota POSTS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tasks.html">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="posts.html">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tickets.html">Tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logoutButton" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card glass">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Posts</h5>
+                        <p class="card-text" id="totalPostsCount">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card glass">
+                    <div class="card-body">
+                        <h5 class="card-title">Pending Posts</h5>
+                        <p class="card-text" id="pendingPostsCount">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card glass">
+                    <div class="card-body">
+                        <h5 class="card-title">Completed Posts</h5>
+                        <p class="card-text" id="completedPostsCount">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary mb-3" id="addPostButton">Add New Post</button>
+                <input type="file" id="importFileInput" class="btn btn-secondary mb-3">
+                <button class="btn btn-secondary mb-3" id="exportButton">Export Posts</button>
+                <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search posts...">
+
+                <div class="table-responsive glass">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Post Date</th>
+                                <th>Post Name</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Performance</th>
+                                <th>Posted By</th>
+                                <th>Posted On</th>
+                                <th>Deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Post Modal -->
+    <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="addPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPostModalLabel">Add New Post</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPostForm">
+                        <div class="form-group">
+                            <label for="postDate">Post Date</label>
+                            <input type="date" class="form-control" id="postDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postName">Post Name</label>
+                            <input type="text" class="form-control" id="postName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postDescription">Description</label>
+                            <textarea class="form-control" id="postDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="postStatus">Status</label>
+                            <select class="form-control" id="postStatus" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="postPerformance">Performance</label>
+                            <input type="text" class="form-control" id="postPerformance" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postedBy">Posted By</label>
+                            <select class="form-control" id="postedBy" required>
+                                <option value="Suman Kumar">Suman Kumar</option>
+                                <option value="Paramaleshwari">Paramaleshwari</option>
+                                <option value="Sada Shiva">Sada Shiva</option>
+                                <option value="Elavarasan">Elavarasan</option>
+                                <option value="Celin">Celin</option>
+                                <option value="Chithra">Chithra</option>
+                                <option value="Sathish">Sathish</option>
+                                <option value="Logav">Logav</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="postedOn">Posted On</label>
+                            <input type="date" class="form-control" id="postedOn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postDeadline">Deadline</label>
+                            <input type="date" class="form-control" id="postDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Post Modal -->
+    <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPostForm">
+                        <input type="hidden" id="editPostId">
+                        <div class="form-group">
+                            <label for="editPostDate">Post Date</label>
+                            <input type="date" class="form-control" id="editPostDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostName">Post Name</label>
+                            <input type="text" class="form-control" id="editPostName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostDescription">Description</label>
+                            <textarea class="form-control" id="editPostDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostStatus">Status</label>
+                            <select class="form-control" id="editPostStatus" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostPerformance">Performance</label>
+                            <input type="text" class="form-control" id="editPostPerformance" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostedBy">Posted By</label>
+                            <select class="form-control" id="editPostedBy" required>
+                                <option value="Suman Kumar">Suman Kumar</option>
+                                <option value="Paramaleshwari">Paramaleshwari</option>
+                                <option value="Sada Shiva">Sada Shiva</option>
+                                <option value="Elavarasan">Elavarasan</option>
+                                <option value="Celin">Celin</option>
+                                <option value="Chithra">Chithra</option>
+                                <option value="Sathish">Sathish</option>
+                                <option value="Logav">Logav</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostedOn">Posted On</label>
+                            <input type="date" class="form-control" id="editPostedOn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostDeadline">Deadline</label>
+                            <input type="date" class="form-control" id="editPostDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let posts = [];
+        let editedPostIndex = -1;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            loadPosts();
+            updateCounts();
+
+            document.getElementById("addPostButton").addEventListener("click", function () {
+                $("#addPostModal").modal("show");
+            });
+
+            document.getElementById("addPostForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                addPost();
+            });
+
+            document.getElementById("editPostForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                updatePost();
+            });
+
+            document.getElementById("exportButton").addEventListener("click", function () {
+                exportPosts();
+            });
+
+            document.getElementById("importFileInput").addEventListener("change", function (event) {
+                importPosts(event);
+            });
+
+            document.getElementById("searchInput").addEventListener("input", function () {
+                filterPosts(this.value);
+            });
+        });
+
+        function loadPosts() {
+            const savedPosts = localStorage.getItem("posts");
+            if (savedPosts) {
+                posts = JSON.parse(savedPosts);
+            }
+            renderPosts();
+        }
+
+        function savePosts() {
+            localStorage.setItem("posts", JSON.stringify(posts));
+        }
+
+        function addPost() {
+            const postDate = document.getElementById("postDate").value;
+            const postName = document.getElementById("postName").value;
+            const postDescription = document.getElementById("postDescription").value;
+            const postStatus = document.getElementById("postStatus").value;
+            const postPerformance = document.getElementById("postPerformance").value;
+            const postedBy = document.getElementById("postedBy").value;
+            const postedOn = document.getElementById("postedOn").value;
+            const postDeadline = document.getElementById("postDeadline").value;
+
+            const newPost = {
+                id: Date.now(),
+                postDate,
+                postName,
+                postDescription,
+                postStatus,
+                postPerformance,
+                postedBy,
+                postedOn,
+                postDeadline
+            };
+
+            posts.push(newPost);
+            savePosts();
+            renderPosts();
+            updateCounts();
+            $("#addPostModal").modal("hide");
+        }
+
+        function renderPosts(filteredPosts = posts) {
+            const postTableBody = document.getElementById("postTableBody");
+            postTableBody.innerHTML = "";
+            filteredPosts.forEach((post, index) => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${post.postDate}</td>
+                    <td>${post.postName}</td>
+                    <td>${post.postDescription}</td>
+                    <td>${post.postStatus}</td>
+                    <td>${post.postPerformance}</td>
+                    <td>${post.postedBy}</td>
+                    <td>${post.postedOn}</td>
+                    <td>${post.postDeadline}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editPost(${index})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deletePost(${index})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                postTableBody.appendChild(row);
+            });
+        }
+
+        function editPost(index) {
+            editedPostIndex = index;
+            const post = posts[index];
+
+            document.getElementById("editPostId").value = post.id;
+            document.getElementById("editPostDate").value = post.postDate;
+            document.getElementById("editPostName").value = post.postName;
+            document.getElementById("editPostDescription").value = post.postDescription;
+            document.getElementById("editPostStatus").value = post.postStatus;
+            document.getElementById("editPostPerformance").value = post.postPerformance;
+            document.getElementById("editPostedBy").value = post.postedBy;
+            document.getElementById("editPostedOn").value = post.postedOn;
+            document.getElementById("editPostDeadline").value = post.postDeadline;
+
+            $("#editPostModal").modal("show");
+        }
+
+        function updatePost() {
+            const postId = document.getElementById("editPostId").value;
+            const postDate = document.getElementById("editPostDate").value;
+            const postName = document.getElementById("editPostName").value;
+            const postDescription = document.getElementById("editPostDescription").value;
+            const postStatus = document.getElementById("editPostStatus").value;
+            const postPerformance = document.getElementById("editPostPerformance").value;
+            const postedBy = document.getElementById("editPostedBy").value;
+            const postedOn = document.getElementById("editPostedOn").value;
+            const postDeadline = document.getElementById("editPostDeadline").value;
+
+            const updatedPost = {
+                id: postId,
+                postDate,
+                postName,
+                postDescription,
+                postStatus,
+                postPerformance,
+                postedBy,
+                postedOn,
+                postDeadline
+            };
+
+            posts[editedPostIndex] = updatedPost;
+            savePosts();
+            renderPosts();
+            updateCounts();
+            $("#editPostModal").modal("hide");
+        }
+
+        function deletePost(index) {
+            if (confirm("Are you sure you want to delete this post?")) {
+                posts.splice(index, 1);
+                savePosts();
+                renderPosts();
+                updateCounts();
+            }
+        }
+
+        function updateCounts() {
+            const totalPostsCount = posts.length;
+            const pendingPostsCount = posts.filter(post => post.postStatus === "Pending").length;
+            const completedPostsCount = posts.filter(post => post.postStatus === "Completed").length;
+
+            document.getElementById("totalPostsCount").innerText = totalPostsCount;
+            document.getElementById("pendingPostsCount").innerText = pendingPostsCount;
+            document.getElementById("completedPostsCount").innerText = completedPostsCount;
+        }
+
+        function exportPosts() {
+            const csvContent = "data:text/csv;charset=utf-8,"
+                + "Post Date,Post Name,Description,Status,Performance,Posted By,Posted On,Deadline\n"
+                + posts.map(post => `${post.postDate},${post.postName},${post.postDescription},${post.postStatus},${post.postPerformance},${post.postedBy},${post.postedOn},${post.postDeadline}`).join("\n");
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "posts.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function importPosts(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const csvData = e.target.result;
+                const rows = csvData.split("\n").slice(1);
+
+                posts = rows.filter(row => row.trim() !== "").map(row => {
+                    const [postDate, postName, postDescription, postStatus, postPerformance, postedBy, postedOn, postDeadline] = row.split(",");
+                    return {
+                        id: Date.now(),
+                        postDate,
+                        postName,
+                        postDescription,
+                        postStatus,
+                        postPerformance,
+                        postedBy,
+                        postedOn,
+                        postDeadline
+                    };
+                });
+
+                savePosts();
+                renderPosts();
+                updateCounts();
+            };
+
+            reader.readAsText(file);
+        }
+
+        function filterPosts(searchTerm) {
+            const filteredPosts = posts.filter(post => 
+                post.postName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.postDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.postStatus.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.postPerformance.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.postedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.postedOn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.postDeadline.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderPosts(filteredPosts);
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var username = localStorage.getItem('username');
+        var password = localStorage.getItem('password');
+
+        // Check if username and password are set and valid
+        if (username === 'akashkrish' && password === 'hellosml') {
+            // User authenticated, show content
+            document.querySelector('.content').style.display = 'block';
+        } else {
+            // Redirect to login page
+            window.location.href = 'index.html';
+        }
+
+        // Logout button functionality
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            window.location.href = 'index.html'; // Redirect to login page after logout
+        });
+    });
+
+</script>
+</body>
+</html>

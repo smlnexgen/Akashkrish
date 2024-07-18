@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AkashKrish Toyota CRM Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body class="content">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">AkashKrish Toyota DASHBOARD</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tasks.html">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="posts.html">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tickets.html">Tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logoutButton" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container">
+    <h1 class="mb-4">Dashboard</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Task Management</div>
+                <div class="card-body">
+                    <canvas id="taskChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Social Media Activity</div>
+                <div class="card-body">
+                    <canvas id="socialMediaChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Post Analytics</div>
+                <div class="card-body">
+                    <canvas id="postChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Ticket Management</div>
+                <div class="card-body">
+                    <canvas id="ticketChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dummy data for demonstration
+    const taskData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+            label: 'Tasks Completed',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            data: [65, 59, 80, 81, 56, 55],
+        }]
+    };
+
+    const socialMediaData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+            label: 'Engagement Rate (%)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            data: [28, 48, 40, 19, 86, 27],
+        }]
+    };
+
+    const postData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+            label: 'Likes',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            data: [35, 25, 40, 50, 45, 55],
+        }]
+    };
+
+    const ticketData = {
+        labels: ['Open', 'In Progress', 'Resolved'],
+        datasets: [{
+            label: 'Ticket Status',
+            backgroundColor: ['#ffc107', '#17a2b8', '#28a745'],
+            borderColor: 'rgba(0, 0, 0, 0.5)',
+            borderWidth: 1,
+            data: [20, 10, 30],
+        }]
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const taskCtx = document.getElementById('taskChart').getContext('2d');
+        new Chart(taskCtx, {
+            type: 'bar',
+            data: taskData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        const socialMediaCtx = document.getElementById('socialMediaChart').getContext('2d');
+        new Chart(socialMediaCtx, {
+            type: 'line',
+            data: socialMediaData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        const postCtx = document.getElementById('postChart').getContext('2d');
+        new Chart(postCtx, {
+            type: 'bar',
+            data: postData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        const ticketCtx = document.getElementById('ticketChart').getContext('2d');
+        new Chart(ticketCtx, {
+            type: 'doughnut',
+            data: ticketData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    });
+</script>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var username = localStorage.getItem('username');
+        var password = localStorage.getItem('password');
+
+        // Check if username and password are set and valid
+        if (username === 'akashkrish' && password === 'hellosml') {
+            // User authenticated, show content
+            document.querySelector('.content').style.display = 'block';
+        } else {
+            // Redirect to login page
+            window.location.href = 'index.html';
+        }
+
+        // Logout button functionality
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            window.location.href = 'index.html'; // Redirect to login page after logout
+        });
+    });
+
+</script>
+</body>
+</html>

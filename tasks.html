@@ -156,7 +156,196 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="taskTableBody"></tbody>
+                <tbody id="taskTableBody">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Task Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Assigned To</th>
+                                    <th>Assigned By</th>
+                                    <th>Assigned On</th>
+                                    <th>Deadline</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="taskTableBody">
+                                <tr>
+                                    <td>08-Jul-24</td>
+                                    <td>Toyota Taisor Reel</td>
+                                    <td>Reel post for Toyota Taisor model.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>07-Jul-24</td>
+                                    <td>09-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(1)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(1)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>09-Jul-24</td>
+                                    <td>Toyota Taisor Post</td>
+                                    <td>Post regarding Toyota Taisor model launch.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>08-Jul-24</td>
+                                    <td>10-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(2)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(2)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>10-Jul-24</td>
+                                    <td>Hilux Post</td>
+                                    <td>Post about Hilux model features.</td>
+                                    <td>In Progress</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>09-Jul-24</td>
+                                    <td>12-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(3)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(3)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>11-Jul-24</td>
+                                    <td>Fortuner Legender Post</td>
+                                    <td>Post for Fortuner Legender's special edition.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>10-Jul-24</td>
+                                    <td>14-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(4)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(4)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>12-Jul-24</td>
+                                    <td>Innova Hycross Post</td>
+                                    <td>Highlighting the Innova Hycross model's features.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>11-Jul-24</td>
+                                    <td>16-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(5)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(5)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>14-Jul-24</td>
+                                    <td>Hyryder Post</td>
+                                    <td>Post featuring the new Hyryder model.</td>
+                                    <td>In Progress</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>13-Jul-24</td>
+                                    <td>18-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(6)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(6)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>15-Jul-24</td>
+                                    <td>Glanza Post</td>
+                                    <td>Details about the Glanza model.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>14-Jul-24</td>
+                                    <td>21-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(7)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(7)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>17-Jul-24</td>
+                                    <td>Rumion Post</td>
+                                    <td>Announcement for Rumion model.</td>
+                                    <td>In Progress</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>16-Jul-24</td>
+                                    <td>23-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(8)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(8)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20-Jul-24</td>
+                                    <td>Offer Post</td>
+                                    <td>Special offer for various models.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>19-Jul-24</td>
+                                    <td>26-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(9)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(9)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>22-Jul-24</td>
+                                    <td>Glanza and Hycross Post</td>
+                                    <td>Post covering both Glanza and Hycross models.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>21-Jul-24</td>
+                                    <td>28-Jul-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(10)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(10)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>25-Jul-24</td>
+                                    <td>Fortuner Post</td>
+                                    <td>Post about the Fortuner model.</td>
+                                    <td>In Progress</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>24-Jul-24</td>
+                                    <td>01-Aug-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(11)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(11)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>26-Jul-24</td>
+                                    <td>Kargil Victory Post</td>
+                                    <td>Post commemorating Kargil Victory Day.</td>
+                                    <td>Completed</td>
+                                    <td>DESIGNER_5X33</td>
+                                    <td>Manager</td>
+                                    <td>25-Jul-24</td>
+                                    <td>02-Aug-24</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editTask(12)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTask(12)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </tbody>
             </table>
         </div>
     </div>

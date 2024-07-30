@@ -110,23 +110,206 @@
                 <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search posts...">
 
                 <div class="table-responsive glass">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Post Date</th>
-                                <th>Post Name</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Performance</th>
-                                <th>Posted By</th>
-                                <th>Posted On</th>
-                                <th>Deadline</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="postTableBody"></tbody>
-                    </table>
-                </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Post Date</th>
+                <th>Post Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Performance</th>
+                <th>Posted By</th>
+                <th>Posted On</th>
+                <th>Likes</th>
+                <th>Comments</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="postTableBody">
+            <tr>
+                <td>08-Jul-24</td>
+                <td>Toyota Taisor Reel</td>
+                <td>Reel post for Toyota Taisor model.</td>
+                <td>Completed</td>
+                <td>Good</td>
+                <td>DESIGNER_5X33</td>
+                <td>07-Jul-24</td>
+                <td>28</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(1)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(1)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>09-Jul-24</td>
+                <td>Toyota Taisor Post</td>
+                <td>Post regarding Toyota Taisor model launch.</td>
+                <td>Completed</td>
+                <td>Fair</td>
+                <td>DESIGNER_5X33</td>
+                <td>08-Jul-24</td>
+                <td>4</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(2)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(2)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>10-Jul-24</td>
+                <td>Hilux Post</td>
+                <td>Post about Hilux model features.</td>
+                <td>In Progress</td>
+                <td>Good</td>
+                <td>DESIGNER_5X33</td>
+                <td>09-Jul-24</td>
+                <td>4</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(3)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(3)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>11-Jul-24</td>
+                <td>Fortuner Legender Post</td>
+                <td>Post for Fortuner Legender's special edition.</td>
+                <td>Completed</td>
+                <td>Poor</td>
+                <td>DESIGNER_5X33</td>
+                <td>10-Jul-24</td>
+                <td>2</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(4)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(4)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>12-Jul-24</td>
+                <td>Innova Hycross Post</td>
+                <td>Highlighting the Innova Hycross model's features.</td>
+                <td>Completed</td>
+                <td>Poor</td>
+                <td>DESIGNER_5X33</td>
+                <td>11-Jul-24</td>
+                <td>3</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(5)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(5)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>14-Jul-24</td>
+                <td>Hyryder Post</td>
+                <td>Post featuring the new Hyryder model.</td>
+                <td>In Progress</td>
+                <td>Fair</td>
+                <td>DESIGNER_5X33</td>
+                <td>13-Jul-24</td>
+                <td>4</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(6)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(6)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>15-Jul-24</td>
+                <td>Glanza Post</td>
+                <td>Details about the Glanza model.</td>
+                <td>Completed</td>
+                <td>Good</td>
+                <td>DESIGNER_5X33</td>
+                <td>14-Jul-24</td>
+                <td>11</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(7)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(7)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>17-Jul-24</td>
+                <td>Rumion Post</td>
+                <td>Announcement for Rumion model.</td>
+                <td>In Progress</td>
+                <td>Good</td>
+                <td>DESIGNER_5X33</td>
+                <td>16-Jul-24</td>
+                <td>7</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(8)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(8)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>20-Jul-24</td>
+                <td>Offer Post</td>
+                <td>Special offer for various models.</td>
+                <td>Completed</td>
+                <td>Fair</td>
+                <td>DESIGNER_5X33</td>
+                <td>19-Jul-24</td>
+                <td>7</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(9)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(9)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>22-Jul-24</td>
+                <td>Glanza and Hycross Post</td>
+                <td>Post covering both Glanza and Hycross models.</td>
+                <td>Completed</td>
+                <td>Good</td>
+                <td>DESIGNER_5X33</td>
+                <td>21-Jul-24</td>
+                <td>4</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(10)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(10)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>25-Jul-24</td>
+                <td>Fortuner Post</td>
+                <td>Post about the Fortuner model.</td>
+                <td>In Progress</td>
+                <td>Poor</td>
+                <td>DESIGNER_5X33</td>
+                <td>24-Jul-24</td>
+                <td>1</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(11)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(11)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>26-Jul-24</td>
+                <td>Kargil Victory Post</td>
+                <td>Post commemorating Kargil Victory Day.</td>
+                <td>Completed</td>
+                <td>Good</td>
+                <td>DESIGNER_5X33</td>
+                <td>25-Jul-24</td>
+                <td>3</td>
+                <td>0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editPost(12)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePost(12)"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
             </div>
         </div>
     </div>
